@@ -1,0 +1,54 @@
+{
+  "name": "attune",
+  "productName": "Attune",
+  "version": "0.1.0",
+  "description": "A minimal, personal desktop player for your Spotify account",
+  "main": "out/main/index.js",
+  "author": "Attune",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
+    "typecheck:node": "tsc -p tsconfig.node.json",
+    "typecheck:web": "tsc -p tsconfig.web.json",
+    "typecheck": "npm run typecheck:node && npm run typecheck:web",
+    "test": "vitest run",
+    "electron:fetch": "node scripts/fetch-electron.mjs",
+    "icons": "node scripts/make-icons.mjs",
+    "lint": "tsc -p tsconfig.node.json --noEmit && tsc -p tsconfig.web.json --noEmit",
+    "dist:win": "npm run build && electron-builder --win --config",
+    "dist:mac": "npm run build && electron-builder --mac --config",
+    "dist:linux": "npm run build && electron-builder --linux --config",
+    "smoke": "node scripts/smoke.mjs"
+  },
+  "dependencies": {
+    "electron-updater": "^6.6.4"
+  },
+  "devDependencies": {
+    "@fontsource-variable/inter": "^5.2.5",
+    "@tanstack/react-query": "^5.76.0",
+    "@types/node": "^22.15.0",
+    "@types/react": "^18.3.20",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.5.0",
+    "autoprefixer": "^10.4.21",
+    "electron": "36.2.1",
+    "electron-builder": "^25.1.8",
+    "electron-vite": "^3.1.0",
+    "lucide-react": "^0.462.0",
+    "postcss": "^8.5.3",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-router-dom": "^7.6.0",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5",
+    "vitest": "^3.1.0",
+    "zustand": "^5.0.5"
+  },
+  "allowScripts": {
+    "electron@36.2.1": true,
+    "esbuild@0.25.12": true
+  }
+}
