@@ -1,0 +1,63 @@
+# electron-builder configuration for Attune.
+# Targets: Windows NSIS, macOS DMG, Linux AppImage + deb (unsigned personal builds for now).
+#
+# NOTE: electronDist points at node_modules/electron/dist, which scripts/fetch-electron.mjs
+# replaces with the castlabs (Widevine-enabled) Electron build when available.
+appId: dev.attune.player
+productName: Attune
+copyright: Copyright © 2026 Attune
+
+directories:
+  buildResources: build
+  output: release
+
+files:
+  - out/main/**/*
+  - out/preload/**/*
+  - out/renderer/**/*
+  - '!**/node_modules/**/{.git,*.md,docs,tests}/**'
+
+electronDist: node_modules/electron/dist
+
+asar: true
+compression: normal
+
+win:
+  target:
+    - target: nsis
+      arch: [x64]
+  icon: build/icon.ico
+  artifactName: ${productName}-Setup-${version}.${ext}
+
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  deleteAppDataOnUninstall: false
+  shortcutName: Attune
+
+mac:
+  target: dmg
+  category: public.app-category.music
+  icon: build/icon.icns
+  artifactName: ${productName}-${version}.${ext}
+  # Unsigned personal build: Gatekeeper requires right-click > Open on first launch.
+  # Code signing + notarization can be enabled here later.
+
+linux:
+  target:
+    - AppImage
+    - deb
+  category: Audio
+  icon: build/icons
+  artifactName: ${productName}-${version}.${ext}
+  desktop:
+    Name: Attune
+    Comment: A minimal, personal Spotify desktop player
+
+# Auto-update publishes to GitHub Releases once a public repo exists.
+# Uncomment and set owner/repo, then electron-updater works on win/linux.
+# publish:
+#   - provider: github
+#     owner: TODO_OWNER
+#     repo: attune
