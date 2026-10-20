@@ -1,0 +1,149 @@
+@import '@fontsource-variable/inter';
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* ---------- Theme tokens ---------- */
+/* Light: airy warm off-white, near-black ink. Dark: warm near-black, soft inks. */
+:root {
+  --att-base: #faf9f7;
+  --att-surface: #ffffff;
+  --att-elevated: #ffffff;
+  --att-line: #e8e4dd;
+  --att-ink: #1a1917;
+  --att-ink-muted: #6e6961;
+  --att-ink-faint: #a6a099;
+  --att-accent: #4c9c8b;
+  --att-accent-ink: #ffffff;
+  color-scheme: light;
+}
+
+html.dark {
+  --att-base: #131210;
+  --att-surface: #191816;
+  --att-elevated: #201e1b;
+  --att-line: #2a2824;
+  --att-ink: #eceae4;
+  --att-ink-muted: #a19c93;
+  --att-ink-faint: #6e6a63;
+  --att-accent: #57b9a5;
+  --att-accent-ink: #0f1413;
+  color-scheme: dark;
+}
+
+/* Accent contrast set at runtime from album-art dominant color (lib/accent.ts) */
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  @apply bg-base text-ink font-sans antialiased;
+  overflow: hidden;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Allow text selection inside containers marked as selectable */
+.selectable {
+  user-select: text;
+}
+
+/* ---------- Frameless titlebar drag regions ---------- */
+.att-drag {
+  -webkit-app-region: drag;
+}
+.att-no-drag {
+  -webkit-app-region: no-drag;
+}
+
+/* ---------- Scrollbars (minimal, OS-like) ---------- */
+.att-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--att-ink-faint) transparent;
+}
+.att-scroll::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+.att-scroll::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  border: 3px solid transparent;
+  border-radius: 8px;
+  background-clip: content-box;
+}
+.att-scroll:hover::-webkit-scrollbar-thumb {
+  background-color: var(--att-ink-faint);
+  background-clip: content-box;
+}
+.att-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ---------- Focus ---------- */
+.att-focusable:focus-visible,
+:focus-visible {
+  outline: 2px solid var(--att-accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ---------- Range inputs (volume / seek) ---------- */
+.att-range {
+  appearance: none;
+  height: 4px;
+  border-radius: 999px;
+  background-color: var(--att-line);
+  background-image: linear-gradient(var(--att-accent), var(--att-accent));
+  background-repeat: no-repeat;
+  background-size: var(--att-range-progress, 0%) 100%;
+  cursor: default;
+}
+.att-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: var(--att-ink);
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+.att-range:hover::-webkit-slider-thumb,
+.att-range:active::-webkit-slider-thumb {
+  opacity: 1;
+}
+.att-range::-moz-range-thumb {
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  border: none;
+  border-radius: 999px;
+  background: var(--att-ink);
+}
+
+/* ---------- Misc utilities ---------- */
+.att-fade-in {
+  animation: att-fade-in 200ms ease forwards;
+}
+@keyframes att-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .att-fade-in {
+    animation: none;
+  }
+  * {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
