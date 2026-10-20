@@ -119,11 +119,13 @@ class PlayerEngine {
         onError: (kind, message) => {
           const store = usePlayer.getState()
           if (kind === 'account') {
+            // Free account connecting the SDK: Spotify refuses it outright.
             store.setInApp({
               status: 'error',
               widevine: true,
               error: 'Spotify Premium is required for in-app streaming.'
             })
+            store.setPremiumBlocked(true, 'Spotify Premium is required for in-app streaming. Browsing and the embed player still work on free accounts.')
           } else if (kind === 'authentication') {
             store.setInApp({ status: 'error', widevine: true, error: `Sign-in issue: ${message}` })
           } else if (kind === 'initialization') {

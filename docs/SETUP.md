@@ -82,6 +82,7 @@ If the browser says `INVALID_CLIENT: Invalid redirect URI`, the dashboard string
 | --- | --- | --- |
 | **In-app** (castlabs) | Leave the in-app streaming toggle (Settings → Playback) on; press play | Attune itself is the Spotify device (Web Playback SDK inside Attune's window via Widevine/EVS) |
 | **Connect remote** | Device picker in the player bar → choose your phone/speaker/desktop Spotify | Any of your Spotify devices |
+| **Embed player (free accounts)** | Row ⋯-menu → *Play via Spotify embed*, or the embed button in the player bar | Spotify's official iframe player — tokenless, ad-supported; Spotify decides what full-plays vs preview-gates |
 
 First in-app playback initializes Widevine (EVS activation) and can take a few seconds; subsequent runs are instant. Within Spotify apps, Attune lists itself under the name in Settings → "Device name" (default `Attune`).
 
@@ -123,6 +124,7 @@ then re-run `dist:win` — the pre-extracted folder short-circuits the download.
 | Login page spins forever | callback port already in use | Close any second Attune instance; port 52331 must be free (`netstat -ano \| findstr 52331`) |
 | `INVALID_CLIENT` in browser | redirect URI mismatch | Recheck §2 — byte-for-byte `http://127.0.0.1:52331/callback` |
 | "No Spotify device available" | no Connect target + no local player | Start playback on your phone once so it appears, or re-enable in-app streaming |
+| `free account` chip in the player bar | signed in with a non-Premium account | Normal: browse/search/save work; use *Play via Spotify embed* (row ⋯ menu) for audio, or switch to a Premium account for in-app/Connect playback |
 | 403 right after login | dev-mode user not registered | Add the signed-in account under dashboard *User Management* |
 | `token-revoked` → auto sign-out | refresh token revoked server-side | Expected behavior: press **Sign in** again; the stored Client ID stays put |
 | In-app streaming toggle gray (packaged) | no castlabs Electron / EVS failure | Confirm `node_modules/electron/attune.electron.json` exists; packaged app must contain the castlabs dist |

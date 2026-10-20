@@ -71,6 +71,7 @@ interface TrackRowProps {
 export function TrackRow({ track, index, active, showAlbum, showArt, playListUris, contextUri, savedPreset = 'lookup' }: TrackRowProps) {
   const navigate = useNavigate()
   const saved = useTrackSaved(track.uri, savedPreset)
+  const openEmbed = usePlayer((s) => s.openEmbed)
   const [menuOpen, setMenuOpen] = useState(false)
 
   const play = () => {
@@ -173,6 +174,11 @@ export function TrackRow({ track, index, active, showAlbum, showArt, playListUri
             <TrackMenu
               onClose={() => setMenuOpen(false)}
               onQueue={() => void playerEngine.addToQueue(track.uri)}
+              onEmbed={() => {
+                // Album embed keeps queue context; fall back to the single-track embed.
+                if (albumId) openEmbed({ type: 'album', id: albumId })
+                else if (track.id) openEmbed({ type: 'track', id: track.id })
+              }}
               albumId={albumId}
               artistId={artist?.id}
               onOpenAlbum={() => albumId && navigate(`/album/${albumId}`)}
@@ -188,6 +194,7 @@ export function TrackRow({ track, index, active, showAlbum, showArt, playListUri
 interface TrackMenuProps {
   onClose: () => void
   onQueue: () => void
+  onEmbed: () => void
   onOpenAlbum?: () => void
   onOpenArtist?: () => void
   albumId?: string | null
@@ -197,6 +204,7 @@ interface TrackMenuProps {
 function TrackMenu({
   onClose,
   onQueue,
+  onEmbed,
   onOpenAlbum,
   onOpenArtist,
   albumId,
@@ -208,6 +216,7 @@ function TrackMenu({
       onMouseLeave={onClose}
     >
       <MenuItem label="Add to queue" onClick={() => { onQueue(); onClose() }} />
+      <MenuItem label="Play via Spotify embed" onClick={() => { onEmbed(); onClose() }} />
       {albumId && <MenuItem label="Go to album" onClick={() => { onOpenAlbum?.(); onClose() }} />}
       {artistId && <MenuItem label="Go to artist" onClick={() => { onOpenArtist?.(); onClose() }} />}
     </div>

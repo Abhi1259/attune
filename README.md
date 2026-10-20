@@ -12,6 +12,7 @@ Electron (castlabs Widevine build) + React + TypeScript + Tailwind. Streams full
 - **Spotify Connect remote** — pick any of your Spotify devices (phone, speaker, desktop Spotify) and control playback; or make *Attune* itself the target device.
 - **Library** — liked songs, saved albums, playlists (yours and followed), albums, artist discography, top tracks/artists, recently played, search.
 - **Queue panel** plus standard transport (play/pause/seek/next/prev/shuffle/repeat/volume), tray controls, Windows/macOS media keys via MediaSession.
+- **Free-account mode** — browse/search/save work without Premium, and audio can play through the official Spotify embed player (Spotify's own ad/preview rules apply there — Attune never bypasses them). The player bar shows a *free account* chip with an embed shortcut.
 - **Clean UI** — light/dark/system theme, auto accent color extracted from the current album art, collapsed/expanded sidebar.
 
 ## What it deliberately does not do

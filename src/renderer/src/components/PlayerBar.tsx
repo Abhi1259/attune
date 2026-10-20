@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import {
   Heart,
   ListMusic,
+  MonitorPlay,
   Pause,
   Play,
   Repeat,
@@ -29,6 +30,8 @@ export function PlayerBar() {
   const snapshot = usePlayer((s) => s.snapshot)
   const inApp = usePlayer((s) => s.inApp)
   const premiumBlocked = usePlayer((s) => s.premiumBlocked)
+  const premiumBlockedMessage = usePlayer((s) => s.premiumBlockedMessage)
+  const openEmbed = usePlayer((s) => s.openEmbed)
   const [queueOpen, setQueueOpen] = useState(false)
 
   const track = snapshot?.track ?? null
@@ -94,10 +97,30 @@ export function PlayerBar() {
 
         {/* Right cluster */}
         <div className="flex min-w-0 flex-1 items-center justify-end gap-1.5">
-          {inApp.status === 'error' && !premiumBlocked && (
+          {premiumBlocked ? (
+            <span
+              className="mr-1 inline-flex items-center gap-1 rounded-full bg-elevated px-2 py-0.5 text-[11px] text-ink-muted"
+              title={premiumBlockedMessage ?? 'Spotify Premium is required for playback API access.'}
+            >
+              <TriangleAlert size={11} /> free account
+            </span>
+          ) : inApp.status === 'error' ? (
             <span className="mr-1 inline-flex items-center gap-1 rounded-full bg-elevated px-2 py-0.5 text-[11px] text-ink-faint" title={inApp.error}>
               <TriangleAlert size={11} /> remote mode
             </span>
+          ) : null}
+          {(premiumBlocked || snapshot) && (
+            <IconToggle
+              label="Spotify embed player"
+              onClick={() => {
+                const current = usePlayer.getState().snapshot?.track
+                if (current?.album?.id) openEmbed({ type: 'album', id: current.album.id })
+                else if (current?.id) openEmbed({ type: 'track', id: current.id })
+                else usePlayer.getState().setLastError('Choose a song first — the embed opens from a track or album.')
+              }}
+            >
+              <MonitorPlay size={15} />
+            </IconToggle>
           )}
           <IconToggle label="Like" active={saved.saved} onClick={saved.toggle}>
             <Heart size={15} fill={saved.saved ? 'currentColor' : 'none'} />

@@ -8,6 +8,7 @@ import { applyArtAccent } from './lib/accentRuntime'
 import { Titlebar } from './components/Titlebar'
 import { Sidebar } from './components/Sidebar'
 import { PlayerBar } from './components/PlayerBar'
+import { EmbedPanel } from './components/EmbedPanel'
 import { HomeView } from './views/Home'
 import { SearchView } from './views/Search'
 import { PlaylistsView, PlaylistDetailView } from './views/Playlists'
@@ -81,6 +82,7 @@ export function App() {
           </Routes>
         </main>
       </div>
+      <EmbedPanel />
       <PlayerBar />
       <ErrorToasts />
     </div>

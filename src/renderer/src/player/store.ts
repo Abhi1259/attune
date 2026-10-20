@@ -37,6 +37,8 @@ interface PlayerStore {
   premiumBlocked: boolean
   premiumBlockedMessage: string | null
   lastError: { message: string; at: number } | null
+  /** Set while the official Spotify embed player is open (free-account audio path). */
+  embed: { type: 'track' | 'album' | 'playlist'; id: string } | null
 
   setSnapshot: (s: Snapshot | null) => void
   setIdle: (idle: boolean) => void
@@ -47,6 +49,8 @@ interface PlayerStore {
   setQueue: (q: SpotifyTrack[] | null) => void
   setPremiumBlocked: (blocked: boolean, message?: string | null) => void
   setLastError: (message: string | null) => void
+  openEmbed: (embed: { type: 'track' | 'album' | 'playlist'; id: string }) => void
+  closeEmbed: () => void
 }
 
 export const usePlayer = create<PlayerStore>((set) => ({
@@ -61,6 +65,7 @@ export const usePlayer = create<PlayerStore>((set) => ({
   premiumBlocked: false,
   premiumBlockedMessage: null,
   lastError: null,
+  embed: null,
 
   setSnapshot: (snapshot) => set({ snapshot }),
   setIdle: (idle) => set({ idle }),
@@ -70,7 +75,9 @@ export const usePlayer = create<PlayerStore>((set) => ({
   setVolume: (volume) => set({ volume }),
   setQueue: (queue) => set({ queue, queueUpdatedAt: Date.now() }),
   setPremiumBlocked: (premiumBlocked, premiumBlockedMessage = null) => set({ premiumBlocked, premiumBlockedMessage }),
-  setLastError: (message) => set({ lastError: message ? { message, at: Date.now() } : null })
+  setLastError: (message) => set({ lastError: message ? { message, at: Date.now() } : null }),
+  openEmbed: (embed) => set({ embed }),
+  closeEmbed: () => set({ embed: null })
 }))
 
 /** Where playback should go: explicit choice > in-app device > active server device. */
