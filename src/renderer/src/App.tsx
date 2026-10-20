@@ -28,15 +28,33 @@ export function App() {
   const artUrl = usePlayer((s) => s.snapshot?.track?.album?.images?.[0]?.url ?? null)
 
   // Bootstrap stores once; the engine's listeners are registered in main.tsx.
+  // Failures must surface, never leave the 'unknown' spinner hanging: catch → setup screen;
+  // watchdog forces the same if all IPC stalls (e.g. antivirus hooking the process).
   useEffect(() => {
     void (async () => {
-      await useSettingsStore.getState().load()
-      await useAuthStore.getState().init()
-      // On restart with a stored session: polling starts here, not from login().
-      if (useAuthStore.getState().phase === 'signed-in') {
-        void playerEngine.startPollingAfterLogin()
+      try {
+        await useSettingsStore.getState().load()
+        await useAuthStore.getState().init()
+        // On restart with a stored session: polling starts here, not from login().
+        if (useAuthStore.getState().phase === 'signed-in') {
+          void playerEngine.startPollingAfterLogin()
+        }
+      } catch (err) {
+        useAuthStore.setState({
+          phase: 'setup',
+          sessionError: `Startup problem: ${err instanceof Error ? err.message : String(err)}`
+        })
       }
     })()
+    const watchdog = setTimeout(() => {
+      if (useAuthStore.getState().phase === 'unknown') {
+        useAuthStore.setState({
+          phase: 'setup',
+          sessionError: 'Startup stalled while reading the stored Spotify session. Antivirus may be blocking Attune — try re-opening the app.'
+        })
+      }
+    }, 12_000)
+    return () => clearTimeout(watchdog)
   }, [])
 
   // Album-art accent follows the playing track + the settings toggle.

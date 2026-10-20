@@ -72,6 +72,22 @@ function createWindow(): BrowserWindow {
     event.preventDefault()
   })
 
+  // Diagnostics: load failures and renderer crashes must never be silent.
+  win.webContents.on('did-finish-load', () => console.log('[window] renderer finished loading'))
+  win.webContents.on('did-fail-load', (_e, errorCode, errorDescription, validatedURL, isMainFrame) => {
+    if (isMainFrame) console.error('[window] main frame failed to load:', errorCode, errorDescription, validatedURL)
+  })
+  win.webContents.on('render-process-gone', (_e, details) => {
+    console.error('[window] renderer gone:', details.reason, 'exit', details.exitCode)
+  })
+
+  // F12 / Ctrl+Shift+I toggles DevTools in any build — users can read the console themselves.
+  win.webContents.on('before-input-event', (_event, input) => {
+    const isDevtoolsKey = input.type === 'keyDown' && input.key === 'F12'
+    const isWinKey = input.type === 'keyDown' && input.control && input.shift && (input.key === 'I' || input.key === 'i')
+    if (isDevtoolsKey || isWinKey) win.webContents.toggleDevTools()
+  })
+
   return win
 }
 

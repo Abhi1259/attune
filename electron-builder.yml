@@ -19,6 +19,11 @@ files:
 
 electronDist: node_modules/electron/dist
 
+# tray.png must live in Process.resourcesPath for packaged tray loads (see main/tray.ts).
+extraResources:
+  - from: build/tray.png
+    to: tray.png
+
 asar: true
 compression: normal
 
