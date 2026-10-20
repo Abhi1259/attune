@@ -101,14 +101,20 @@ export function LoginScreen() {
           </div>
         ) : (
           <EmptyState
-            title="Signed in to Spotify's developer portal?"
-            hint="Attune opens your system browser; completing authorization connects this window."
+            title="Spotify opens the login page"
+            hint="Attune never sees your password. On Spotify's page, pick your usual method — Continue with Google, Apple, Facebook or email — and the app connects automatically."
             action={
               <Button variant="primary" pending={pendingLogin} onClick={() => void useAuthStore.getState().login()} className="mt-2">
                 <span className="text-[13px]">Log in with Spotify</span>
               </Button>
             }
           />
+        )}
+
+        {clientIdSet && phase !== 'setup' && (
+          <p className="mt-4 text-center text-[11px] text-ink-faint">
+            Google / Apple / Facebook sign-ins are handled by Spotify on their hosted page — no passwords ever pass through Attune.
+          </p>
         )}
 
         {pendingLogin && (

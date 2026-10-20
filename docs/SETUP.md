@@ -71,6 +71,7 @@ npm run dev
    - answers on the loopback server at `http://127.0.0.1:52331/callback`,
    - verifies `state`, then exchanges the code without a client secret.
 3. Approve the scopes. Attune launches into Home.
+   - If your Spotify account usually signs in with **Google / Apple / Facebook**, use those buttons on the Spotify-hosted page — they work exactly like on spotify.com. Attune only receives the OAuth result; passwords and social-login dialogs stay on Spotify's side.
 
 If the browser says `INVALID_CLIENT: Invalid redirect URI`, the dashboard string does not match §2 exactly — that is the only mismatch Attune cannot paper over.
 
